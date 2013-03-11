@@ -349,11 +349,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description = "Create calibration files for your camera")
     #args
 
-    parser.add_argument("--camera", type=int, help="id of the camera", default = 1)
+    parser.add_argument("--camera", type=int, help="id of the camera", default = 0)
     parser.add_argument("--width",  type=int, help="number of chessboard squares wide", default = 8)
     parser.add_argument("--height",  type=int, help="number of chessboard squares high", default = 5)
     parser.add_argument("--planemode", action="store_true", help="calibrate on a single 2D plane", default = False)
-    parser.add_argument("--gridsize",  type=float, help="chessboard grid size in real units", default = 0.029)
+    parser.add_argument("--gridsize",  type=float, help="chessboard grid size in real units", default = 0.030)
     parser.add_argument("--calibrationfile", type=str, help="filename to output calibration", default = "default")
 
     args = parser.parse_args()
