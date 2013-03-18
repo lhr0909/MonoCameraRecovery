@@ -20,7 +20,9 @@ while True:
 #            corner.draw(color=SimpleCV.Color.BLUE, width=1)
 #    img.show()
     imgcv = img.getMatrix()
-    print imgcv.rows, imgcv.cols
-    cv.Circle(imgcv, (320, 240), 30, cv.RGB(255,0,0), thickness=5)
-    img2 = SimpleCV.Image(imgcv)
+    #create HSV image using OpenCV
+    hsv = cv.CreateImage((imgcv.cols, imgcv.rows), cv.IPL_DEPTH_8U, 3)
+    cv.CvtColor(imgcv, hsv, cv.CV_BGR2HSV)
+
+    img2 = SimpleCV.Image(hsv)
     img2.show()
