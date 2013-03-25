@@ -11,10 +11,9 @@ while True:
     [retval, img] = camera.read()
     #convert to HSV
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV_FULL)
-#    cv2.imwrite('hsv.png', hsv)
 
     mask = cv2.inRange(hsv,
-        numpy.array([230, 150, 0], numpy.uint8),
+        numpy.array([230, 100, 0], numpy.uint8),
         numpy.array([255, 220, 255], numpy.uint8))
 
 #    #open then close
@@ -42,13 +41,16 @@ while True:
         for c in corners:
             #print img_square[c[0,1],c[0,0]]
             if img_square[c[0,1],c[0,0]] > 0:
-                cv2.circle(img, tuple(c[0]), 2, [0, 255, 0])
+                cv2.circle(img, tuple(c[0]), 5, [0, 255, 0], thickness=2)
 
     cv2.imshow("MonoCameraRecovery", img)
     #cv2.imshow("MonoCameraRecovery", img_square)
 
     key = cv2.waitKey(1)
     if key == 13:
+        cv2.imwrite('raw/hsv.png', hsv)
+        cv2.imwrite("raw/result.png", img)
+        cv2.imwrite("raw/square.png", img_square)
         break
 
 camera.release()
