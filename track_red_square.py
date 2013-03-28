@@ -7,14 +7,18 @@ camera = cv2.VideoCapture(0)
 # Auto Exposure, and Auto Backlight Compensation
 # in the driver settings!
 
+#TODO: auto checking background lighting and adjust the threshold
+
 while True:
     [retval, img] = camera.read()
     #convert to HSV
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV_FULL)
 
+    print numpy.average(hsv[:,:,2])
+
     mask = cv2.inRange(hsv,
-        numpy.array([230, 100, 0], numpy.uint8),
-        numpy.array([255, 220, 255], numpy.uint8))
+        numpy.array([230, 70, 200], numpy.uint8),
+        numpy.array([255, 200, 255], numpy.uint8))
 
 #    #open then close
 #    se = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
@@ -28,7 +32,9 @@ while True:
     for i in xrange(len(contours)):
         area = cv2.contourArea(contours[i], False)
         if area >= 13000:
-            cv2.drawContours(img_square, contours, i, [255, 255, 255], thickness=cv2.cv.CV_FILLED)
+            cv2.drawContours(img_square,
+                contours, i, [255, 255, 255],
+                thickness=cv2.cv.CV_FILLED)
 
     img_square = cv2.blur(img_square, (65,65))
     #img_square = cv2.medianBlur(img_square, 51)
