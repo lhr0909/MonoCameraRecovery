@@ -1,5 +1,7 @@
 import cv2
 import numpy
+import homography
+
 cv2.namedWindow("MonoCameraRecovery", cv2.CV_WINDOW_AUTOSIZE)
 camera = cv2.VideoCapture(0)
 
@@ -62,6 +64,8 @@ while True:
         cv2.imwrite("raw/square.png", img_square)
         square_corners = numpy.array(square_corners, numpy.float32)
         print square_corners
+        H = homography.getHomography(square_corners)
+        print H
         break
 
 camera.release()
