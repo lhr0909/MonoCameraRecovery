@@ -14,11 +14,11 @@ while True:
     #convert to HSV
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV_FULL)
 
-    print numpy.average(hsv[:,:,2])
+    #print numpy.average(hsv[:,:,2])
 
     mask = cv2.inRange(hsv,
-        numpy.array([230, 70, 200], numpy.uint8),
-        numpy.array([255, 200, 255], numpy.uint8))
+        numpy.array([230, 70, 170], numpy.uint8),
+        numpy.array([255, 200, 220], numpy.uint8))
 
 #    #open then close
 #    se = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
@@ -43,11 +43,14 @@ while True:
     img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     corners = cv2.goodFeaturesToTrack(img_gray, 100, 0.1, 50)
+    square_corners = []
     if corners.shape[0] > 0:
         for c in corners:
             #print img_square[c[0,1],c[0,0]]
             if img_square[c[0,1],c[0,0]] > 0:
                 cv2.circle(img, tuple(c[0]), 5, [0, 255, 0], thickness=2)
+                square_corners.append((c[0,0], c[0,1]))
+
 
     cv2.imshow("MonoCameraRecovery", img)
     #cv2.imshow("MonoCameraRecovery", img_square)
@@ -57,6 +60,8 @@ while True:
         cv2.imwrite('raw/hsv.png', hsv)
         cv2.imwrite("raw/result.png", img)
         cv2.imwrite("raw/square.png", img_square)
+        square_corners = numpy.array(square_corners, numpy.float32)
+        print square_corners
         break
 
 camera.release()
