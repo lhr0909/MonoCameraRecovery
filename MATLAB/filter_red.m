@@ -17,13 +17,13 @@ function actual_corners = filter_red(im)
     % imtool(imHSV(:,:,3));
     % figure(4);
     % imshow(im(:,:,1) - im(:,:,2) - im(:,:,3));
-%     imtool(imHSV);
+%      imtool(imHSV);
     mask_red_square = zeros(size(im, 1), size(im, 2));
-    mask_red_square(find(((imHSV(:,:,1) > 0.95 | imHSV(:,:,1) < 0.02)) & (imHSV(:,:,2) > 0.3) & (imHSV(:,:,3) > 0.15))) = 1;
+    mask_red_square(find(((imHSV(:,:,1) > 0.94 & imHSV(:,:,1) < 0.99)) & (imHSV(:,:,2) > 0.45 & imHSV(:,:,2) < 0.65) & (imHSV(:,:,3) > 0.9))) = 1;
     % mask_red_square = imopen(mask_red_square, strel('square', 3));
     % mask_red_square = imclose(mask_red_square, strel('square', 3));
     % 
-%     imtool(mask_red_square);
+%      imtool(mask_red_square);
     imCount = bwlabel(mask_red_square, 8);
     count = max(max(imCount));
     % Getting rid of the small noise
@@ -38,10 +38,10 @@ function actual_corners = filter_red(im)
             i = i + 1;
         end
     end
-%     imtool(mask_red_square);
+     imtool(mask_red_square);
     % Grab Corners
     mask_red_square = double(filter2(boxFilter2, mask_red_square, 'same'));
-    corners = corner(im(:,:,1));
+    corners = corner(im(:,:,2));
     figure(4);
     imshow(im);
     hold on;

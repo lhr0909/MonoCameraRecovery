@@ -1,13 +1,31 @@
 import numpy
 
-def nullspace(A):
-    eps = 1e0
-    u, s, vh = numpy.linalg.svd(A)
-    null_space = numpy.compress(s <= eps, vh, axis=0)
-    return null_space.T
+def nullspace(A, eps=2**-52):
+    '''
+    Nullspace function
+    copied from the MATLAB null() function
+    using only the orthonormal basis
+    '''
+    m, n = A.shape
+    u, S, V = numpy.linalg.svd(A)
+
+    if m > 1:
+        s = numpy.diag(S)
+        s = s[numpy.nonzero(s)]
+        smax = numpy.max(s)
+    elif m == 1:
+        s = S[0,0]
+        smax = s
+    else:
+        s = 0
+        smax = 0
+
+    tol = max(m, n) * smax * eps
+    r = sum(s > tol)
+    return V[:, r:]
 
 
-def getHomography(corners):
+def getHomography(corners, L=500):
     if corners.shape[0] == 4 and corners.shape[1] == 2:
         #fix corners
         corners_mean = numpy.mean(corners, axis=0)
@@ -31,8 +49,8 @@ def getHomography(corners):
                     numpy.delete(corners, i, axis=0)
                     break
         new_corners = numpy.array(new_corners, numpy.float32)
+        print new_corners
         c = new_corners
-        L = 5
         sc = numpy.array([
             (-L/2, -L/2),
             (L/2, -L/2),
@@ -52,6 +70,10 @@ def getHomography(corners):
         )
         ns = nullspace(M).T
         ns = numpy.divide(ns, ns[0,8])
+        ns = numpy.array(
+            [[ns[0,0], ns[0,1], ns[0,2]],
+             [ns[0,3], ns[0,4], ns[0,5]],
+             [ns[0,6], ns[0,7], ns[0,8]]], numpy.float32)
         return ns
     else:
         return None
