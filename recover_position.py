@@ -3,6 +3,7 @@ from numpy import linalg
 
 def recover_position(H, K):
     invK = linalg.inv(K)
+    print invK
     #get rotational matrix R
     R0raw = numpy.dot(invK, H[:,0])
     R1raw = numpy.dot(invK, H[:,1])
@@ -22,14 +23,14 @@ def recover_position(H, K):
 
 if __name__ == "__main__":
     H = numpy.array(
-        [[  1.77615881e-01,  1.80893600e-01, -9.42133713e+01],
-         [ -1.16202652e-01, -1.79449499e-01,  7.77696381e+01],
-         [ -3.55348364e-02,  2.49527674e-02,  1.00000000e+00]],
+        [[2.64407914375522,  0.231720687559951, -690.523613388706],
+         [-0.507121938721236, 2.59868620652448, -589.471296323130],
+         [ 0.000490272463600770, -0.000498893118900209, 1.0]],
         numpy.float32)
 
     K = numpy.array(
-        [[700.38176146, 0.0, 309.9551006],
-         [0.0, 700.01361423, 279.4139976],
+        [[674.327013196338, 0.0, 476.778746813838],
+         [0.0, 674.327013196338, 292.515323265311],
          [0.0, 0.0, 1.0]],
         numpy.float32)
-    print recover_position(H, K)
+    print recover_position(linalg.inv(H), K)

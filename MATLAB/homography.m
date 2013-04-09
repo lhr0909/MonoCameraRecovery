@@ -33,7 +33,7 @@ function H = homography(img, square_size, corners)
           0  0 0 x3 y3 1 -y33*x3 -y33*y3 -y33;
          x4 y4 1  0  0 0 -x44*x4 -x44*y4 -x44;
           0  0 0 x4 y4 1 -y44*x4 -y44*y4 -y44;];
-    H = null(A);
+    H = nullspace(A);
     H1 = [H(1) H(2) H(3); H(4) H(5) H(6); H(7) H(8) H(9)] ./ H(9);
     T1 = maketform('projective', H1');
     it1 = imtransform(img, T1);

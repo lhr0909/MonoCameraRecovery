@@ -7,14 +7,14 @@ def nullspace(A, eps=2**-52):
     using only the orthonormal basis
     '''
     m, n = A.shape
-    u, S, V = numpy.linalg.svd(A)
+    u, S, Vh = numpy.linalg.svd(A)
+    V = Vh.T
 
     if m > 1:
-        s = numpy.diag(S)
-        s = s[numpy.nonzero(s)]
-        smax = numpy.max(s)
+        s = S
+        smax = numpy.max(S)
     elif m == 1:
-        s = S[0,0]
+        s = S[0]
         smax = s
     else:
         s = 0
@@ -25,7 +25,7 @@ def nullspace(A, eps=2**-52):
     return V[:, r:]
 
 
-def getHomography(corners, L=500):
+def getHomography(corners, L=5):
     if corners.shape[0] == 4 and corners.shape[1] == 2:
         #fix corners
         corners_mean = numpy.mean(corners, axis=0)
@@ -36,7 +36,7 @@ def getHomography(corners, L=500):
                     new_corners.append([corners[i,0], corners[i,1]])
                     numpy.delete(corners, i, axis=0)
                     break
-                if corners[i,0] > corners_mean[0] and corners[i,1] <= corners_mean[1] and len(new_corners) == 1:
+                if corners[i,0] <= corners_mean[0] and corners[i,1] > corners_mean[1] and len(new_corners) == 1:
                     new_corners.append([corners[i,0], corners[i,1]])
                     numpy.delete(corners, i, axis=0)
                     break
@@ -44,18 +44,18 @@ def getHomography(corners, L=500):
                     new_corners.append([corners[i,0], corners[i,1]])
                     numpy.delete(corners, i, axis=0)
                     break
-                if corners[i,0] <= corners_mean[0] and corners[i,1] > corners_mean[1] and len(new_corners) == 3:
+                if corners[i,0] > corners_mean[0] and corners[i,1] <= corners_mean[1] and len(new_corners) == 3:
                     new_corners.append([corners[i,0], corners[i,1]])
                     numpy.delete(corners, i, axis=0)
                     break
         new_corners = numpy.array(new_corners, numpy.float32)
-        print new_corners
+        #print new_corners
         c = new_corners
         sc = numpy.array([
             (-L/2, -L/2),
-            (L/2, -L/2),
+            (-L/2, L/2),
             (L/2, L/2),
-            (-L/2, L/2)],numpy.float32)
+            (L/2, -L/2)],numpy.float32)
 
         M = numpy.array([
             [c[0,0], c[0,1], 1, 0, 0, 0, -sc[0,0]*c[0,0], -sc[0,0]*c[0,1], -sc[0,0]],
@@ -79,5 +79,5 @@ def getHomography(corners, L=500):
         return None
 
 if __name__ == "__main__":
-    H = getHomography(numpy.array([[463,406],[235,109],[210,362],[498,142]], numpy.float32))
+    H = getHomography(numpy.array([[319,382],[153,161],[346,191],[146,342]], numpy.float32))
     print H

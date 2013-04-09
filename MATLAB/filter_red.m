@@ -38,15 +38,15 @@ function actual_corners = filter_red(im)
             i = i + 1;
         end
     end
-     imtool(mask_red_square);
+%      imtool(mask_red_square);
     % Grab Corners
     mask_red_square = double(filter2(boxFilter2, mask_red_square, 'same'));
     corners = corner(im(:,:,2));
-    figure(4);
-    imshow(im);
-    hold on;
-    plot(corners(:,1), corners(:,2),'g*');
-    hold off;
+%     figure(4);
+%     imshow(im);
+%     hold on;
+%     plot(corners(:,1), corners(:,2),'g*');
+%     hold off;
     actual_corners = [];
     for i = 1:size(corners, 1)
         if (mask_red_square(corners(i,2), corners(i,1)) > 0)

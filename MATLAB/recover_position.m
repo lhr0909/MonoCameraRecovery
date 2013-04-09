@@ -4,8 +4,12 @@
 % http://en.wikipedia.org/wiki/Camera_resectioning
 
 function [R, C, dist, angx, angy, angz, t] = recover_position(H, K)
+    disp(H);
+    disp(K);
     r1a = inv(K) * H(:,1);
+    disp(r1a);
     r2a = inv(K) * H(:,2);
+    disp(r2a);
     ta = inv(K) * H(:,3);
     r1 = r1a ./ norm(r1a);
     r2 = r2a ./ norm(r2a);
