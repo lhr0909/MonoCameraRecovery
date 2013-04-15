@@ -1,10 +1,12 @@
 import cv2
+import visual
 import numpy
 from numpy import linalg
 from filter_red_square import filter_red_square
 from get_corners import get_corners
 from homography import getHomography
 from recover_position import recover_position
+
 
 cv2.namedWindow("MonoCameraRecovery", cv2.CV_WINDOW_AUTOSIZE)
 camera = cv2.VideoCapture(0)
@@ -18,6 +20,10 @@ K = numpy.array(
      [0.0, 700.01361423, 279.4139976],
      [0.0, 0.0, 1.0]],
     numpy.float32)
+
+square = visual.box(pos=(0, 0, 0), size=(4.0, 4.0, 0.1), color=visual.color.red)
+cam_ball = visual.sphere(pos=(0, 0, 5), radius=0.5, color=visual.color.green)
+
 
 def get_mask():
     #print numpy.average(hsv[:,:,2])
@@ -38,6 +44,7 @@ def get_mask():
     return mask
 
 while True:
+    visual.sleep(0.0001)
     [retval, img] = camera.read()
     #img = cv2.imread("raw/original.png")
     orig_img = numpy.copy(img)
