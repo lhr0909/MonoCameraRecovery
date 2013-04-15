@@ -44,7 +44,6 @@ def get_mask():
     return mask
 
 while True:
-    visual.sleep(0.0001)
     [retval, img] = camera.read()
     #img = cv2.imread("raw/original.png")
     orig_img = numpy.copy(img)
@@ -70,6 +69,7 @@ while True:
     cv2.imshow("MonoCameraRecovery", img)
     #cv2.imshow("MonoCameraRecovery", img_square)
 
+    visual.sleep(0.0001)
     key = cv2.waitKey(1)
     if key == 13:
         cv2.imwrite('raw/original.png', orig_img)
