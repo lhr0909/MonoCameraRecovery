@@ -3,7 +3,7 @@ from numpy import linalg
 
 def recover_position(H, K):
     invK = linalg.inv(K)
-    print invK
+    #print invK
     #get rotational matrix R
     R0raw = numpy.dot(invK, H[:,0])
     R1raw = numpy.dot(invK, H[:,1])

@@ -1,6 +1,8 @@
 import cv2
 import numpy
 from numpy import linalg
+from filter_red_square import filter_red_square
+from get_corners import get_corners
 from homography import getHomography
 from recover_position import recover_position
 
@@ -11,13 +13,29 @@ camera = cv2.VideoCapture(0)
 # Auto Exposure, and Auto Backlight Compensation
 # in the driver settings!
 
-#TODO: auto checking background lighting and adjust the threshold
-
 K = numpy.array(
     [[700.38176146, 0.0, 309.9551006],
      [0.0, 700.01361423, 279.4139976],
      [0.0, 0.0, 1.0]],
     numpy.float32)
+
+def get_mask():
+    #print numpy.average(hsv[:,:,2])
+    #    mask = cv2.inRange(hsv,
+    #        numpy.array([230, 135, 250], numpy.uint8),
+    #        numpy.array([255, 165, 255], numpy.uint8))
+    mask = cv2.inRange(hsv,
+        numpy.array([230, 135, 200], numpy.uint8),
+        numpy.array([255, 175, 255], numpy.uint8))
+    #    mask = cv2.inRange(hsv,
+    #        numpy.array([230, 185, 80], numpy.uint8),
+    #        numpy.array([255, 250, 170], numpy.uint8))
+    #    #open then close
+    #se = cv2.getStructuringElement(cv2.MORPH_RECT, (11, 11))
+    #mask = cv2.dilate(mask, se)
+    #    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, se)
+    #    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, se)
+    return mask
 
 while True:
     [retval, img] = camera.read()
@@ -25,46 +43,21 @@ while True:
     orig_img = numpy.copy(img)
     #convert to HSV
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV_FULL)
+    mask = get_mask()
 
-    #print numpy.average(hsv[:,:,2])
-
-#    mask = cv2.inRange(hsv,
-#        numpy.array([230, 135, 250], numpy.uint8),
-#        numpy.array([255, 165, 255], numpy.uint8))
-    mask = cv2.inRange(hsv,
-        numpy.array([230, 185, 80], numpy.uint8),
-        numpy.array([255, 250, 170], numpy.uint8))
-
-#    #open then close
-    #se = cv2.getStructuringElement(cv2.MORPH_RECT, (11, 11))
-    #mask = cv2.dilate(mask, se)
-#    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, se)
-#    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, se)
-
-    img_square = numpy.zeros(img[:,:,0].shape, numpy.uint8)
-
-    #Filter out the small noise
-    [contours, hierarchy] = cv2.findContours(mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-    for i in xrange(len(contours)):
-        area = cv2.contourArea(contours[i], False)
-        if area >= 13000:
-            cv2.drawContours(img_square,
-                contours, i, [255, 255, 255],
-                thickness=cv2.cv.CV_FILLED)
-
-    img_square = cv2.blur(img_square, (51,51))
+    img_square = filter_red_square(hsv, mask)
     #img_square = cv2.medianBlur(img_square, 51)
 
     #Corner Detection
-    img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    corners = cv2.goodFeaturesToTrack(img_gray, 100, 0.1, 50)
-    square_corners = []
-    if corners.shape[0] > 0:
-        for c in corners:
-            #print img_square[c[0,1],c[0,0]]
-            if img_square[c[0,1],c[0,0]] > 0:
-                cv2.circle(img, tuple(c[0]), 5, [0, 255, 0], thickness=2)
-                square_corners.append((c[0,0], c[0,1]))
+    square_corners = get_corners(img, img_square)
+
+    if len(square_corners) == 4:
+        square_corners = numpy.array(square_corners, numpy.float32)
+        #print square_corners
+        H = getHomography(square_corners)
+        #print H
+        if H is not None:
+            print recover_position(linalg.inv(H), K)
 
 
     cv2.imshow("MonoCameraRecovery", img)
