@@ -50,6 +50,8 @@ def getHomography(corners, L=5):
                     break
         new_corners = numpy.array(new_corners, numpy.float32)
         #print new_corners
+        if len(new_corners) != 4:
+            return None
         c = new_corners
         sc = numpy.array([
             (-L/2, -L/2),
