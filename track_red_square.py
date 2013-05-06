@@ -120,7 +120,8 @@ while True:
         #print H
         if H is not None:
             R, C = recover_position(linalg.inv(H), K)
-            print numpy.linalg.norm(C), C
+#            print numpy.linalg.norm(C), C
+#            print linalg.inv(R)
             cam_arrow1.pos = (C[0], -C[1], -C[2])
             cam_arrow2.pos = (C[0], -C[1], -C[2])
             cam_arrow1.axis = tuple(numpy.dot(R, numpy.array([0,0,-1], numpy.float32)).tolist())

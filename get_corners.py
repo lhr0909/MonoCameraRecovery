@@ -11,4 +11,6 @@ def get_corners(img, img_square):
             if img_square[c[0, 1], c[0, 0]] > 0:
                 cv2.circle(img, tuple(c[0]), 5, [0, 255, 0], thickness=2)
                 square_corners.append((c[0, 0], c[0, 1]))
+            else:
+                cv2.circle(img, tuple(c[0]), 5, [255, 0, 0], thickness=2)
     return square_corners

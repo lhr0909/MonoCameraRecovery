@@ -1,5 +1,6 @@
 import numpy
 from numpy import linalg
+from math import *
 
 def recover_position(H, K):
     invK = linalg.inv(K)
@@ -17,8 +18,30 @@ def recover_position(H, K):
         [R0[0], R1[0], R2[0]],
         [R0[1], R1[1], R2[1]],
         [R0[2], R1[2], R2[2]],
-        ], numpy.float32)
+    ], numpy.float32)
+    #get position
     C = -linalg.inv(R).dot(T)
+    #get eulerian angles
+    angy = atan2(-R[2,0], sqrt(R[0,0]**2 + R[2,1]**2))
+    angz = atan2(R[1,0]/cos(angy), R[0,0]/cos(angy))
+    angx = atan2(R[2,1]/cos(angy), R[2,2]/cos(angy))
+    Rx = numpy.array([
+        [1, 0, 0],
+        [0, cos(-angx), -sin(-angx)],
+        [0, sin(-angx), cos(-angx)]
+    ], numpy.float32)
+    Ry = numpy.array([
+        [cos(angy), 0, sin(angy)],
+        [0, 1, 0],
+        [-sin(angy), 0, cos(angy)]
+    ], numpy.float32)
+    Rz = numpy.array([
+        [cos(angz), -sin(angz), 0],
+        [sin(angz), cos(angz), 0],
+        [0, 0, 1]
+    ], numpy.float32)
+
+    R = numpy.dot(numpy.dot(Rx, Ry), Rz)
     return R, C
 #    return linalg.norm(C)
 
