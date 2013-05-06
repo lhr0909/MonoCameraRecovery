@@ -35,7 +35,8 @@ cv2.setMouseCallback("MonoCameraRecovery", mouseDrag, 0)
 camera = cv2.VideoCapture(0)
 
 square = visual.box(pos=(0, 0, 0), size=(4.0, 4.0, 0.1), color=visual.color.red)
-cam_ball = visual.arrow(pos=(0, 0, 5), axis=(0, 0, -1), shaftwidth=0.5, color=visual.color.green)
+cam_arrow1 = visual.arrow(pos=(0, 0, 5), axis=(0, 0, -1), shaftwidth=1, color=visual.color.green)
+cam_arrow2 = visual.arrow(pos=(0, 0, 5), axis=(0, 1, 0), shaftwidth=1, color=visual.color.green)
 
 # Make sure you turn off the Auto White Balance,
 # Auto Exposure, and Auto Backlight Compensation
@@ -120,8 +121,10 @@ while True:
         if H is not None:
             R, C = recover_position(linalg.inv(H), K)
             print numpy.linalg.norm(C), C
-            cam_ball.pos = (C[0], -C[1], -C[2])
-            cam_ball.axis = tuple(numpy.dot(R, numpy.array([0,0,-1], numpy.float32)).tolist())
+            cam_arrow1.pos = (C[0], -C[1], -C[2])
+            cam_arrow2.pos = (C[0], -C[1], -C[2])
+            cam_arrow1.axis = tuple(numpy.dot(R, numpy.array([0,0,-1], numpy.float32)).tolist())
+            cam_arrow2.axis = tuple(numpy.dot(R, numpy.array([0,1,0], numpy.float32)).tolist())
 
 
 
