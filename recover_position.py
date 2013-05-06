@@ -19,7 +19,7 @@ def recover_position(H, K):
         [R0[2], R1[2], R2[2]],
         ], numpy.float32)
     C = -linalg.inv(R).dot(T)
-    return C
+    return R, C
 #    return linalg.norm(C)
 
 if __name__ == "__main__":

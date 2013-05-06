@@ -1,10 +1,11 @@
 import cv2
 
 def get_corners(img, img_square):
-    img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+#    img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    img_gray = img[:,:,0] #use the blue channel
     square_corners = []
-    corners = cv2.goodFeaturesToTrack(img_gray, 100, 0.1, 50)
-    if corners.shape[0] > 0:
+    corners = cv2.goodFeaturesToTrack(img_gray, 100, 0.5, 30, useHarrisDetector=True, k=0.1)
+    if corners is not None and corners.shape[0] > 0:
         for c in corners:
             #print img_square[c[0,1],c[0,0]]
             if img_square[c[0, 1], c[0, 0]] > 0:
