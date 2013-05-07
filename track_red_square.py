@@ -13,6 +13,8 @@ box_top = 0
 box_right = 0
 box_bot = 0
 
+pos = numpy.array([[0, 0, 5]], numpy.float32)
+
 mask_low = numpy.array([240, 115, 240], numpy.uint8)
 mask_high = numpy.array([255, 135, 255], numpy.uint8)
 
@@ -28,6 +30,15 @@ def mouseDrag(evt, x, y, flags, *param):
         box_bot = y
         check_box = True
 
+def get_avg_position():
+    global pos
+    if pos.shape[0] > 5:
+        pos = numpy.delete(pos, 0, 0)
+        return tuple(numpy.mean(pos, axis=0).tolist())
+    else:
+        return tuple(pos[0,:].tolist())
+
+
 
 
 cv2.namedWindow("MonoCameraRecovery", cv2.CV_WINDOW_AUTOSIZE)
@@ -35,8 +46,8 @@ cv2.setMouseCallback("MonoCameraRecovery", mouseDrag, 0)
 camera = cv2.VideoCapture(0)
 
 square = visual.box(pos=(0, 0, 0), size=(4.0, 4.0, 0.1), color=visual.color.red)
-cam_arrow1 = visual.arrow(pos=(0, 0, 5), axis=(0, 0, -1), shaftwidth=1, color=visual.color.green)
-cam_arrow2 = visual.arrow(pos=(0, 0, 5), axis=(0, 1, 0), shaftwidth=1, color=visual.color.green)
+cam_arrow1 = visual.arrow(pos=(0, 0, 5), axis=(0, 0, -2), shaftwidth=2, color=visual.color.green)
+cam_arrow2 = visual.arrow(pos=(0, 0, 5), axis=(0, 2, 0), shaftwidth=2, color=visual.color.green)
 
 # Make sure you turn off the Auto White Balance,
 # Auto Exposure, and Auto Backlight Compensation
@@ -73,8 +84,8 @@ def set_mask(box_left, box_top, box_right, box_bot):
     mean1 = numpy.mean(img_crop_hsv[:, :, 1])
     mean2 = numpy.mean(img_crop_hsv[:, :, 2])
     print mean0, mean1, mean2
-    mask_low = numpy.array([ll(mean0, 20), ll(mean1, 20), ll(mean2, 20)], numpy.uint8)
-    mask_high = numpy.array([ul(mean0, 20), ul(mean1, 20), ul(mean2, 20)], numpy.uint8)
+    mask_low = numpy.array([ll(mean0, 30), ll(mean1, 30), ll(mean2, 30)], numpy.uint8)
+    mask_high = numpy.array([ul(mean0, 30), ul(mean1, 30), ul(mean2, 30)], numpy.uint8)
     print mask_low, mask_high
     check_box = False
 
@@ -107,7 +118,7 @@ while True:
 
     mask = get_mask(hsv)
 
-    img_square = filter_red_square(hsv, mask)
+    img_square = filter_red_square(hsv, mask, 4000)
     #img_square = cv2.medianBlur(img_square, 51)
 
     #Corner Detection
@@ -122,10 +133,14 @@ while True:
             R, C = recover_position(linalg.inv(H), K)
 #            print numpy.linalg.norm(C), C
 #            print linalg.inv(R)
-            cam_arrow1.pos = (C[0], -C[1], -C[2])
-            cam_arrow2.pos = (C[0], -C[1], -C[2])
-            cam_arrow1.axis = tuple(numpy.dot(R, numpy.array([0,0,-1], numpy.float32)).tolist())
-            cam_arrow2.axis = tuple(numpy.dot(R, numpy.array([0,1,0], numpy.float32)).tolist())
+            pos = numpy.vstack((
+                pos, numpy.array([C[0], -C[1], -C[2]],
+                    numpy.float32)))
+            new_pos = get_avg_position()
+            cam_arrow1.pos = new_pos
+            cam_arrow2.pos = new_pos
+            cam_arrow1.axis = tuple(numpy.dot(R, numpy.array([0,0,-2], numpy.float32)).tolist())
+            cam_arrow2.axis = tuple(numpy.dot(R, numpy.array([0,2,0], numpy.float32)).tolist())
 
 
 
