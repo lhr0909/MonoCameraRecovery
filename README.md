@@ -2,7 +2,9 @@ RECOVERING 3D INFORMATION WITH A SINGLE CAMERA
 ==============================================
 
 Haoran (Simon) Liang
+
 Multidisciplinary Minor in Imaging, Final Project
+
 Rose-Hulman Institute of Technology
 
 ABSTRACT
