@@ -8,7 +8,7 @@
 %                         . .     ] etc 
 %         figNo   - optional figure number
 %         lw      - optional line width
-%         col     - optional 3-vector specifying the colour
+%         col     - optional 3-vector specifying the color
 %
 %
 % See also:  EDGELINK, LINESEG, MAXLINEDEV, MERGESEG

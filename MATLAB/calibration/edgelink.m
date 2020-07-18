@@ -79,7 +79,7 @@ function [edgelist, edgeim] = edgelink(im, minlength)
 %
 % Function to track all the edge points associated with a start point.  From
 % a given starting point it tracks in one direction, storing the coords of
-% the edge points in an array and labelling the pixels in the edge image
+% the edge points in an array and labeling the pixels in the edge image
 % with the -ve of their edge number.  When no more connected points are
 % found the function returns to the start point and tracks in the opposite
 % direction.  Finally a check for the overall number of edge points found is
@@ -158,7 +158,7 @@ function [thereIsAPoint, nextr, nextc] = nextpoint(rp,cp);
     global ROWS;
     global COLS;
     
-    % row and column offsets for the eight neighbours of a point
+    % row and column offsets for the eight neighbors of a point
     % starting with those that are 4-connected.
     roff = [1  0 -1  0  1  1 -1 -1];
     coff = [0  1  0 -1  1 -1 -1  1];
@@ -166,7 +166,7 @@ function [thereIsAPoint, nextr, nextc] = nextpoint(rp,cp);
     r = rp+roff;
     c = cp+coff;
     
-    % Search through neighbours and return first connected edge point
+    % Search through neighbors and return first connected edge point
     for i = 1:8
 	if r(i) >= 1 & r(i) <= ROWS & c(i) >= 1 & c(i) <= COLS
 	    if EDGEIM(r(i),c(i)) == 1

@@ -36,7 +36,7 @@ fprintf('Last segment is indicated by clicking with any other mouse button\n');
 count = 0;
 but = 1;
 while but==1 & count < Nseg
-  [xp,yp,but] = ginput(1);       % Get digitised point
+  [xp,yp,but] = ginput(1);       % Get digitized point
   count = count + 1;	
   rmin = Inf;
   for s = 1:Nseg
@@ -51,7 +51,7 @@ while but==1 & count < Nseg
   end
   
   segs = [segs; closestseg];          % Build up list of segments
-  selectedSegs = [selectedSegs smin]; % Remeber selected seg Nos
+  selectedSegs = [selectedSegs smin]; % Remember selected seg Nos
   
   line([closestseg(1) closestseg(3)], [closestseg(2) closestseg(4)], ...
        'Color',[1 0 0]);
