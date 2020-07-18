@@ -15,7 +15,7 @@ figure(1), imshow(edgeim); truesize(1)
 % list for each edge contour.  Discard contours less than 10 pixels long.
 [edgelist, labelededgeim] = edgelink(edgeim, 30);
     
-% Display the labeled edge image with separate colours for each
+% Display the labeled edge image with separate colors for each
 % distinct edge (choose your favorite colourmap!)
 figure(2), imagesc(labelededgeim); colormap(vga), 
 axis image, axis off, truesize(2)
